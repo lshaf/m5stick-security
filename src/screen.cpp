@@ -24,7 +24,7 @@ void Screen::drawHeader(bool isConnected)
 {
   int internalPercent = (int)getInternalBatteryPercent();
   StickCP2.Display.setCursor(5, 5);
-  StickCP2.Display.printf("[%3d%%]", internalPercent);
+  StickCP2.Display.printf("[%3d%%] ", internalPercent);
 
   // Set color for connection status
   if (isConnected) {
