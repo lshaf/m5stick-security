@@ -34,17 +34,17 @@ void Screen::drawHeader(bool isConnected)
 
 void Screen::drawTimeHeader()
 {
-  drawHeader(false);
   if (StickCP2.Rtc.isEnabled())
   {
-    StickCP2.Display.setTextSize(1);
-    static char lastTimeStr[9] = {0};
+    static char lastTimeStr[6] = {0};
+    char timeStr[6];
     auto time = StickCP2.Rtc.getTime();
-    char timeStr[9];
-    sprintf(timeStr, "%02d:%02d:%02d", time.hours, time.minutes, time.seconds);
+    sprintf(timeStr, "%02d:%02d", time.hours, time.minutes);
     if (strcmp(timeStr, lastTimeStr) == 0) return;
 
-    StickCP2.Display.fillRect(StickCP2.Display.width() - 50, 5, 45, 8, TFT_BLACK);
+    drawHeader(false);
+    StickCP2.Display.setTextSize(1);
+    StickCP2.Display.fillRect(StickCP2.Display.width() - 40, 5, 40, 8, TFT_BLACK);
     StickCP2.Display.drawRightString(timeStr, StickCP2.Display.width() - 5, 5);
     strcpy(lastTimeStr, timeStr);
   }

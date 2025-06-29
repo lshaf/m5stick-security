@@ -11,8 +11,8 @@ void MenuManager::updateScreen() {
   for (size_t i = 0; i < menuItems.size(); ++i) {
     StickCP2.Display.setCursor(10, (18 + i * (fh + 4)) + 2);
     if ((int)i == selected) {
-      StickCP2.Display.setTextColor(TFT_BLACK, TFT_YELLOW);
-      StickCP2.Display.fillRect(5, 18 + i * (fh + 4), sw - 10, fh + 4, TFT_YELLOW);
+      StickCP2.Display.setTextColor(TFT_BLACK, SELECTED_COLOR);
+      StickCP2.Display.fillRect(5, 18 + i * (fh + 4), sw - 10, fh + 4, SELECTED_COLOR);
     } else {
       StickCP2.Display.setTextColor(TFT_WHITE, TFT_BLACK);
     }

@@ -4,3 +4,4 @@
 
 extern Keypad keypad;
 extern EncoderStateManager encoder;
+extern int SELECTED_COLOR;

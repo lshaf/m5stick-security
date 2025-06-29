@@ -44,11 +44,10 @@ void Keypad::show(String title) {
     this->title = title;
   }
 
-  static String printedMessage = "";
   int btnW = (StickCP2.Display.width() - (6 * NUM_COLS)) / NUM_COLS, btnH = 25, x0 = 5, y0 = StickCP2.Display.height() - (NUM_ROWS * (btnH + 5));
   for (int col = 0; col < 3; ++col) {
     if (strlen(TOP_BUTTONS[col]) > 0) {
-      uint16_t color = (selectedRow == 0 && selectedCol == col) ? TFT_YELLOW : TFT_WHITE;
+      uint16_t color = (selectedRow == 0 && selectedCol == col) ? SELECTED_COLOR : TFT_WHITE;
       StickCP2.Display.drawRect(x0 + col * (btnW + 5), y0, btnW, btnH, color);
       StickCP2.Display.setCursor(x0 + col * (btnW + 5) + 6, y0 + 6);
       StickCP2.Display.setTextColor(color, TFT_BLACK);
@@ -66,7 +65,7 @@ void Keypad::show(String title) {
       bool isCapsKey = (row == 3 && col == 2);
       bool isActive = (isNumKey && numMode) || (isCapsKey && capsMode);
 
-      uint16_t color = (selectedRow == row + 1 && selectedCol == col) ? TFT_YELLOW : TFT_WHITE;
+      uint16_t color = (selectedRow == row + 1 && selectedCol == col) ? SELECTED_COLOR : TFT_WHITE;
       uint16_t fillColor = isActive ? TFT_WHITE : TFT_BLACK;
       uint16_t textColor = isActive ? TFT_BLACK : color;
 
@@ -97,22 +96,22 @@ void Keypad::show(String title) {
   if (this->title.length() > 0) {
     StickCP2.Display.setTextSize(1);
     StickCP2.Display.setCursor(5, 18);
-    StickCP2.Display.fillRect(5, 16, StickCP2.Display.fontWidth() - 10, StickCP2.Display.fontHeight() + 4, TFT_BLACK);
+    StickCP2.Display.fillRect(5, 16, StickCP2.Display.width() - 10, StickCP2.Display.fontHeight() + 4, TFT_BLACK);
     StickCP2.Display.setTextColor(TFT_WHITE, TFT_BLACK);
     StickCP2.Display.print(this->title);
   }
 
   // Draw message at the top
+  static String printedMessage = "";
   if (printedMessage != message) {
     int yText = 30;
-    int xPadding = 14;
+    int xPadding = 5;
     StickCP2.Display.setTextSize(2);
     StickCP2.Display.fillRect(xPadding, yText, StickCP2.Display.fontWidth() * 10, StickCP2.Display.fontHeight() * 3, TFT_BLACK);
-    StickCP2.Display.setCursor(xPadding, yText);
     StickCP2.Display.setTextColor(TFT_WHITE, TFT_BLACK);
     // Print message in lines of 10 chars, with left padding
     for (int i = 0; i < message.length(); i += 10) {
-      StickCP2.Display.setCursor(5, yText + (i / 10) * StickCP2.Display.fontHeight());
+      StickCP2.Display.setCursor(xPadding, yText + (i / 10) * StickCP2.Display.fontHeight());
       StickCP2.Display.print(message.substring(i, i + 10));
     }
 

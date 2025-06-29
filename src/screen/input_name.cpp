@@ -17,8 +17,8 @@ void InputNameScreen::updateScreen() {
     StickCP2.Display.setTextSize(2);
     StickCP2.Display.drawCenterString(this->inputName, StickCP2.Display.width() / 2, StickCP2.Display.height() / 2);
     StickCP2.Display.setTextSize(1);
-    StickCP2.Display.drawString("Press encoder to go", 10, StickCP2.Display.height() - 21);
-    StickCP2.Display.drawString("back", 10, StickCP2.Display.height() - 13);
+    StickCP2.Display.drawCenterString("Press encoder to go", StickCP2.Display.width() / 2, StickCP2.Display.height() - 21);
+    StickCP2.Display.drawCenterString("back", StickCP2.Display.width() / 2, StickCP2.Display.height() - 12);
   }
 }
 void InputNameScreen::handleInput() {
