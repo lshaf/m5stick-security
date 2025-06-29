@@ -1,13 +1,5 @@
 #include "M5StickCPlus2.h"
-#include "screen.h"
-
-void Screen::init()
-{
-  StickCP2.begin();
-  StickCP2.Display.setTextSize(1);
-  StickCP2.Display.setTextColor(TFT_WHITE, TFT_BLACK);
-  StickCP2.Display.fillScreen(TFT_BLACK);
-}
+#include "utility/screen.h"
 
 float Screen::getInternalBatteryPercent()
 {
@@ -23,6 +15,7 @@ float Screen::getInternalBatteryPercent()
 void Screen::drawHeader(bool isConnected)
 {
   int internalPercent = (int)getInternalBatteryPercent();
+  StickCP2.Display.setTextSize(1);
   StickCP2.Display.setCursor(5, 5);
   StickCP2.Display.printf("[%3d%%] ", internalPercent);
 
@@ -41,8 +34,10 @@ void Screen::drawHeader(bool isConnected)
 
 void Screen::drawTimeHeader()
 {
+  drawHeader(false);
   if (StickCP2.Rtc.isEnabled())
   {
+    StickCP2.Display.setTextSize(1);
     static char lastTimeStr[9] = {0};
     auto time = StickCP2.Rtc.getTime();
     char timeStr[9];

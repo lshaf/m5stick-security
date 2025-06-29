@@ -1,11 +1,11 @@
 #pragma once
+
 #include <M5StickCPlus2.h>
 
-class Screen
-{
+class Screen {
 public:
-  void init();
-  float getInternalBatteryPercent();
   void drawHeader(bool isConnected);
   void drawTimeHeader();
+private:
+  float getInternalBatteryPercent();
 };

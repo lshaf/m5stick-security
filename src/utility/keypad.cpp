@@ -1,5 +1,6 @@
 #include <M5StickCPlus2.h>
-#include "keypad.h"
+#include "utility/keypad.h"
+#include "globals.h"
 #include "Unit_MiniEncoderC.h"
 
 const int NUM_ROWS = 5; // 4 keypad rows + 1 for top buttons
@@ -14,19 +15,35 @@ const char* KEYPAD_LAYOUT[4][3] = {
 
 const char* TOP_BUTTONS[3] = {"OK", "", "DEL"}; // Center is empty
 
-Keypad::Keypad(UNIT_MINIENCODERC* encoder):encoder(encoder){}
-
 // Add these at the top of your file or as class members if not already present
 unsigned long lastTapTime = 0;
 int tapIndex = 0;
 int lastRow = -1, lastCol = -1;
 const unsigned long tapTimeout = 1000; // 1 second
 
+Keypad::Keypad() {}
+
 // Add these as class members or static variables at the top
 bool numMode = false;
 bool capsMode = false;
+void Keypad::setMessage(const String &msg) {
+  message = msg;
+}
 
-void Keypad::show() {
+String Keypad::getMessage() const {
+  return message;
+}
+
+void Keypad::setOnOk(std::function<void(const String &)> cb) {
+  onOkCallback = cb;
+}
+
+void Keypad::show(String title) {
+  StickCP2.Display.setTextSize(1);
+  if (!title.isEmpty()) {
+    this->title = title;
+  }
+
   static String printedMessage = "";
   int btnW = (StickCP2.Display.width() - (6 * NUM_COLS)) / NUM_COLS, btnH = 25, x0 = 5, y0 = StickCP2.Display.height() - (NUM_ROWS * (btnH + 5));
   for (int col = 0; col < 3; ++col) {
@@ -76,9 +93,18 @@ void Keypad::show() {
       }
     }
   }
+
+  if (this->title.length() > 0) {
+    StickCP2.Display.setTextSize(1);
+    StickCP2.Display.setCursor(5, 18);
+    StickCP2.Display.fillRect(5, 16, StickCP2.Display.fontWidth() - 10, StickCP2.Display.fontHeight() + 4, TFT_BLACK);
+    StickCP2.Display.setTextColor(TFT_WHITE, TFT_BLACK);
+    StickCP2.Display.print(this->title);
+  }
+
   // Draw message at the top
   if (printedMessage != message) {
-    int yText = 26;
+    int yText = 30;
     int xPadding = 14;
     StickCP2.Display.setTextSize(2);
     StickCP2.Display.fillRect(xPadding, yText, StickCP2.Display.fontWidth() * 10, StickCP2.Display.fontHeight() * 3, TFT_BLACK);
@@ -96,24 +122,18 @@ void Keypad::show() {
 }
 
 void Keypad::handleInput() {
-  static bool prevEncoderPressed = false; // Add this static variable
   bool redraw = false;
 
-  bool isEncoderPressed = !encoder->getButtonStatus();
-  bool isRotatedLeft = encoder->getEncoderValue() < -1;
-  bool isRotatedRight = encoder->getEncoderValue() > 1;
-  if (isRotatedLeft || isRotatedRight) encoder->resetCounter();
-
   // Navigation
-  if (isRotatedLeft) {
+  if (encoder.movedLeft()) {
     selectedCol = selectedCol - 1;
     if (selectedRow == 0 && selectedCol == 1) selectedCol = 0;
   }
-  if (isRotatedRight) {
+  if (encoder.movedRight()) {
     selectedCol = selectedCol + 1;
     if (selectedRow == 0 && selectedCol == 1) selectedCol = 2;
   }
-  if (isRotatedRight || isRotatedLeft) {
+  if (encoder.isMoved()) {
     if (selectedCol < 0) {
       selectedRow--;
       selectedCol = NUM_COLS - 1;
@@ -140,12 +160,12 @@ void Keypad::handleInput() {
   }
 
   // Handle button press (only on press, not hold)
-  if (isEncoderPressed && !prevEncoderPressed) { // Only on new press
+  if (encoder.wasPressed()) { // Only on new press
     unsigned long now = millis();
     if (selectedRow == 0) {
       // Top buttons
       if (selectedCol == 0) {
-        Serial.println("OK pressed: " + message);
+        if (onOkCallback) onOkCallback(message);
       } else if (selectedCol == 2) {
         if (!message.isEmpty()) message.remove(message.length() - 1);
         redraw = true;
@@ -205,6 +225,4 @@ void Keypad::handleInput() {
   }
 
   if (redraw) show();
-
-  prevEncoderPressed = isEncoderPressed; // Update previous state
 }
