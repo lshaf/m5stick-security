@@ -1,4 +1,5 @@
 #pragma once
+#include <M5StickCPlus2.h>
 #include "components/menu_manager.h"
 #include "components/router.h"
 #include "screen/input_name.h"
@@ -9,7 +10,7 @@ public:
     menuItems = {
       {"Input Name", []() { Router::setScreen(new InputNameScreen()); }},
       {"Show Info", []() { /* show info screen */ }},
-      {"Exit", []() { /* exit or reset */ }}
+      {"Power Off", []() { StickCP2.Power.powerOff(); }},
     };
   }
 };
