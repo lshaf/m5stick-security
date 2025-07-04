@@ -4,8 +4,7 @@
 
 class Screen {
 public:
-  void drawHeader(bool isConnected);
+  void drawHeader();
   void drawTimeHeader();
-private:
   float getInternalBatteryPercent();
 };

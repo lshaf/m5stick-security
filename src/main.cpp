@@ -16,10 +16,10 @@ EncoderStateManager encoder(mini_encoder);
 
 void setup()
 {
+  StickCP2.begin();
   Serial.begin(115200);
   mini_encoder.begin(&Wire, MINIENCODERC_ADDR, 0, 26, 100000UL);
 
-  StickCP2.begin();
   StickCP2.Display.setTextColor(TFT_WHITE, TFT_BLACK);
   StickCP2.Display.fillScreen(TFT_BLACK);
 

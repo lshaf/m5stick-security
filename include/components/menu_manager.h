@@ -15,8 +15,10 @@ public:
 
     void updateScreen() override;
     void handleInput() override;
-    void destroy() override {}
+    void destroy() override {};
+    void renderMenu();
 
     int selected = 0;
     std::vector<MenuItem> menuItems;
+    int menuY = 18;
 };
