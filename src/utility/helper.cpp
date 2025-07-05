@@ -25,4 +25,15 @@ namespace Helper
 
     delete[] buffer;
   }
+
+  String xorEncrypt(const String &data, const String &key)
+  {
+    String result = "";
+    for (size_t i = 0; i < data.length(); ++i)
+    {
+      char c = data[i] ^ key[i % key.length()];
+      result += c;
+    }
+    return result;
+  }
 } // namespace Helper

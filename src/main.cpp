@@ -1,9 +1,11 @@
 #include <Arduino.h>
+#include <LittleFS.h>
 #include <M5StickCPlus2.h>
 
 #include "globals.h"
 #include "utility/screen.h"
 #include "utility/encoder_state_manager.h"
+#include "utility/serial_command.h"
 
 #include "screen/main_menu.h"
 #include "components/router.h"
@@ -17,6 +19,7 @@ EncoderStateManager encoder(mini_encoder);
 void setup()
 {
   StickCP2.begin();
+  LittleFS.begin();
   Serial.begin(115200);
   mini_encoder.begin(&Wire, MINIENCODERC_ADDR, 0, 26, 100000UL);
 
@@ -31,6 +34,7 @@ void loop()
   StickCP2.update();
   encoder.updateEncoderState();
   
+  SerialCommand::listen();
   screen.drawTimeHeader();
   Router::handleMenu();
 }

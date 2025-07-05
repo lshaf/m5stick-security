@@ -3,5 +3,6 @@
 #include "BleKeyboard.h"
 
 Keypad keypad;
+String xorKey = "m5stick-security";
 BleKeyboard bleKeyboard("M5Security", "Espressif", 100);
 int SELECTED_COLOR = TFT_BLUE;

@@ -1,0 +1,4 @@
+namespace SerialCommand
+{
+  void listen();
+}
