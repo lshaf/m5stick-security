@@ -20,5 +20,6 @@ public:
 
     int selected = 0;
     std::vector<MenuItem> menuItems;
+    String title = "";
     int menuY = 18;
 };

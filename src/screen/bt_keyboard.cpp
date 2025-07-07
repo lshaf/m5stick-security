@@ -6,6 +6,12 @@
 #include "utility/helper.h"
 #include "LittleFS.h"
 
+BluetoothKeyboardScreen::BluetoothKeyboardScreen() {
+  this->isConnected = false;
+  this->currentState = STATE_MAIN;
+  bleKeyboard.begin();
+}
+
 void BluetoothKeyboardScreen::loadPasswords() {
   File file = LittleFS.open("/meta_data.ps", "r");
   if (file) {
@@ -39,6 +45,7 @@ void BluetoothKeyboardScreen::updateScreen() {
   StickCP2.Display.drawCenterString("BLE", StickCP2.Display.width() / 2, 5);
 
   if (currentState == STATE_MAIN) {
+    this->title = "BLE Keyboard";
     menuItems = {
       {"Password", [this]() {
         this->loadPasswords();
@@ -49,6 +56,7 @@ void BluetoothKeyboardScreen::updateScreen() {
       {"Back", []() { Router::setScreen(new MainMenuScreen()); }},
     };
   } else if (currentState == STATE_PASSWORD) {
+    this->title = "Type Password";
     menuItems.clear();
     for (const auto& item : this->passwordItems) {
       String pw = item.password;

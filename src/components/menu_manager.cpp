@@ -10,14 +10,20 @@ void MenuManager::updateScreen() {
 void MenuManager::renderMenu() {
   StickCP2.Display.setTextSize(1);
 
+  auto marginTop = this->menuY;
+  if (!this->title.isEmpty()) {
+    StickCP2.Display.setTextColor(TFT_WHITE, TFT_BLACK);
+    StickCP2.Display.drawCenterString(this->title, StickCP2.Display.width() / 2, marginTop);
+    marginTop += StickCP2.Display.fontHeight() + 5; // Add some space after the title
+  }
   auto fh = StickCP2.Display.fontHeight();
   auto sw = StickCP2.Display.width();
   auto blockHeight = fh + 6;
   for (size_t i = 0; i < menuItems.size(); ++i) {
-    StickCP2.Display.setCursor(10, (this->menuY + i * blockHeight) + 3);
+    StickCP2.Display.setCursor(10, (marginTop + i * blockHeight) + 3);
     if ((int)i == selected) {
       StickCP2.Display.setTextColor(TFT_BLACK, SELECTED_COLOR);
-      StickCP2.Display.fillRect(5, this->menuY + i * blockHeight, sw - 10, blockHeight, SELECTED_COLOR);
+      StickCP2.Display.fillRect(5, marginTop + i * blockHeight, sw - 10, blockHeight, SELECTED_COLOR);
     } else {
       StickCP2.Display.setTextColor(TFT_WHITE, TFT_BLACK);
     }

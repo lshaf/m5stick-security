@@ -4,6 +4,7 @@
 
 class BluetoothKeyboardScreen : public MenuManager {
 public:
+  BluetoothKeyboardScreen();
   void updateScreen() override;
   void handleInput() override;
   void destroy() override;
