@@ -38,12 +38,19 @@ void Keypad::setOnOk(std::function<void(const String &)> cb) {
   onOkCallback = cb;
 }
 
-void Keypad::show(String title) {
-  StickCP2.Display.setTextSize(1);
-  if (!title.isEmpty()) {
-    this->title = title;
-  }
+void Keypad::show(String title, int maxLength) {
+  this->maxLength = maxLength;
+  this->title = title;
+  this->printedMessage = "";
+  this->selectedCol = 0;
+  this->selectedRow = 0;
 
+  StickCP2.Display.fillRect(0, 18, StickCP2.Display.width(), StickCP2.Display.height() - 18, TFT_BLACK);
+  updateScreen();
+}
+
+void Keypad::updateScreen() {
+  StickCP2.Display.setTextSize(1);
   int btnW = (StickCP2.Display.width() - (6 * NUM_COLS)) / NUM_COLS, btnH = 25, x0 = 5, y0 = StickCP2.Display.height() - (NUM_ROWS * (btnH + 5));
   for (int col = 0; col < 3; ++col) {
     if (strlen(TOP_BUTTONS[col]) > 0) {
@@ -95,19 +102,17 @@ void Keypad::show(String title) {
 
   if (this->title.length() > 0) {
     StickCP2.Display.setTextSize(1);
-    StickCP2.Display.setCursor(5, 18);
     StickCP2.Display.fillRect(5, 16, StickCP2.Display.width() - 10, StickCP2.Display.fontHeight() + 4, TFT_BLACK);
     StickCP2.Display.setTextColor(TFT_WHITE, TFT_BLACK);
-    StickCP2.Display.print(this->title);
+    StickCP2.Display.drawCenterString(this->title, StickCP2.Display.width() / 2, 18);
   }
 
   // Draw message at the top
-  static String printedMessage = "";
   if (printedMessage != message) {
     int yText = 30;
     int xPadding = 5;
     StickCP2.Display.setTextSize(2);
-    StickCP2.Display.fillRect(xPadding, yText, StickCP2.Display.fontWidth() * 10, StickCP2.Display.fontHeight() * 3, TFT_BLACK);
+    StickCP2.Display.fillRect(0, yText, StickCP2.Display.width(), StickCP2.Display.fontHeight() * 3, TFT_BLACK);
     StickCP2.Display.setTextColor(TFT_WHITE, TFT_BLACK);
     // Print message in lines of 10 chars, with left padding
     for (int i = 0; i < message.length(); i += 10) {
@@ -143,7 +148,7 @@ void Keypad::handleInput() {
     }
     if (selectedRow < 0) selectedRow = NUM_ROWS - 1;
     if (selectedRow >= NUM_ROWS) selectedRow = 0;
-    if (message.length() >= 30) {
+    if (message.length() >= this->maxLength) {
       selectedRow = 0; // Reset to top row if message is too long
       if (selectedCol == 1) selectedCol = 0;
     }
@@ -223,5 +228,5 @@ void Keypad::handleInput() {
     tapIndex = -1;
   }
 
-  if (redraw) show();
+  if (redraw) updateScreen();
 }

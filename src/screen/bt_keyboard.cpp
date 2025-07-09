@@ -9,6 +9,7 @@
 BluetoothKeyboardScreen::BluetoothKeyboardScreen() {
   this->isConnected = false;
   this->currentState = STATE_MAIN;
+  bleKeyboard.setName(config.getBleName().c_str());
   bleKeyboard.begin();
 }
 

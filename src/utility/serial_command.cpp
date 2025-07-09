@@ -4,7 +4,8 @@
 #include <LittleFS.h>
 #include <Arduino.h>
 
-String passwordFilePath = "/meta_data.ps";
+#define PASSWORD_PATH "/meta_data.ps"
+
 namespace SerialCommand
 {
   void passwordAdd(const String& command)
@@ -25,8 +26,8 @@ namespace SerialCommand
     String xorString = label + ":" + password;
     String encrypted = Helper::xorEncrypt(xorString, xorKey);
     
-    File file = LittleFS.open(passwordFilePath, "a");
-    if (!file) file = LittleFS.open(passwordFilePath, "w");
+    File file = LittleFS.open(PASSWORD_PATH, "a");
+    if (!file) file = LittleFS.open(PASSWORD_PATH, "w");
     if (file) {
       file.println(encrypted);
       file.close();
@@ -45,7 +46,7 @@ namespace SerialCommand
     }
 
     // Read all lines except the one to delete
-    File file = LittleFS.open(passwordFilePath, "r");
+    File file = LittleFS.open(PASSWORD_PATH, "r");
     if (!file) {
       Serial.println("[del_password] No password file found.");
       return;
@@ -70,7 +71,7 @@ namespace SerialCommand
       return;
     }
     // Write back filtered content
-    file = LittleFS.open(passwordFilePath, "w");
+    file = LittleFS.open(PASSWORD_PATH, "w");
     if (file) {
       file.print(newContent);
       file.close();
@@ -92,7 +93,7 @@ namespace SerialCommand
     } else if (command.startsWith("del_password ")) {
       passwordDelete(command);
     } else if (command == "clr_password") {
-      File file = LittleFS.open(passwordFilePath, "w");
+      File file = LittleFS.open(PASSWORD_PATH, "w");
       if (file) {
         file.close();
         Serial.println("[clr_password] All passwords cleared.");

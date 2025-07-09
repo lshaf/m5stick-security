@@ -26,6 +26,8 @@ void setup()
   StickCP2.Display.setTextColor(TFT_WHITE, TFT_BLACK);
   StickCP2.Display.fillScreen(TFT_BLACK);
 
+  StickCP2.Display.setBrightness(255 * config.getBrightness() / 100);
+
   Router::setScreen(new MainMenuScreen());
 }
 
