@@ -75,7 +75,7 @@ void ReflexTestGameScreen::handleInput() {
     // Use encoder left/right or up/down to change selection
     if (encoder.movedLeft() || encoder.movedRight()) {
       selectedMenu = 1 - selectedMenu; // Toggle between 0 and 1
-      this->needsRedraw = true;
+      this->redrawScreen();
     }
     if (encoder.wasPressed()) {
       if (selectedMenu == 0) {

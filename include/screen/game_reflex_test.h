@@ -28,6 +28,6 @@ private:
   void setBackgroundColor(uint16_t color);
   void changeScreen(State newState) {
     this->state = newState;
-    this->needsRedraw = true;
+    this->redrawScreen();
   }
 };

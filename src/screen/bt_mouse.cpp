@@ -59,7 +59,7 @@ void BluetoothMouseScreen::updateScreen() {
 void BluetoothMouseScreen::handleInput() {
   bool bleConnected = bleDevice.isConnected();
   if (this->isConnected != bleConnected) {
-    this->needsRedraw = true;
+    this->redrawScreen(false);
     this->isConnected = bleConnected;
   }
 

@@ -3,6 +3,7 @@
 #include "screen/bt_mouse.h"
 #include "screen/game_menu.h"
 #include "screen/setting_menu.h"
+#include "screen/battery.h"
 #include "components/router.h"
 
 MainMenuScreen::MainMenuScreen() {
@@ -12,6 +13,7 @@ MainMenuScreen::MainMenuScreen() {
       {"BLE Mouse", []() { Router::setScreen(new BluetoothMouseScreen()); }},
       {"Game", []() { Router::setScreen(new GameMenuScreen()); }},
       {"Settings", []() { Router::setScreen(new SettingMenuScreen()); }},
+      {"Battery Info", []() { Router::setScreen(new BatteryScreen()); }},
       {"Power Off", []() { StickCP2.Power.powerOff(); }},
     };
 }

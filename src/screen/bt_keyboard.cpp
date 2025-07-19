@@ -115,7 +115,7 @@ void BluetoothKeyboardScreen::updateScreen() {
 void BluetoothKeyboardScreen::handleInput() {
   bool bleConnected = bleDevice.isConnected();
   if (this->isConnected != bleConnected) {
-    this->needsRedraw = true;
+    this->redrawScreen(false);
     this->isConnected = bleConnected;
   }
 

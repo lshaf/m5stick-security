@@ -2,10 +2,12 @@
 
 class MenuScreen {
 public:
-  bool needsRedraw = true;
   void redrawScreen(bool clear = true);
+  bool needsRedraw();
   virtual void updateScreen() = 0;
   virtual void handleInput() = 0;
   virtual void destroy() = 0;
   virtual ~MenuScreen() {}
+private:
+  bool triggerRedraw = true;
 };

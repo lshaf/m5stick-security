@@ -11,8 +11,7 @@ void Router::setScreen(MenuScreen* screen) {
 }
 
 void Router::refreshScreen() {
-  if (currentScreen && currentScreen->needsRedraw) {
-    currentScreen->needsRedraw = false;
+  if (currentScreen && currentScreen->needsRedraw()) {
     currentScreen->updateScreen();
   }
 }

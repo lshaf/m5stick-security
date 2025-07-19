@@ -26,13 +26,13 @@ EncoderStateManager::EncoderButtonState EncoderStateManager::getLatestButtonStat
   }
 
   EncoderButtonState currentState = IDLE;
-  if (!isEncoderPressed && wasPressed) {
-    unsigned long pressDuration = now - pressStartTime;
-    if (pressDuration >= threshold) {
-      currentState = EncoderButtonState::LONG_PRESSED;
-    } else {
-      currentState = EncoderButtonState::PRESSED;
-    }
+  unsigned long pressDuration = now - pressStartTime;
+  if (!isEncoderPressed && wasPressed && pressDuration < threshold) {
+    currentState = EncoderButtonState::PRESSED;
+  }
+
+  if (isEncoderPressed && wasPressed && pressDuration >= threshold) {
+    currentState = EncoderButtonState::LONG_PRESSED;
   }
 
   wasPressed = isEncoderPressed;
