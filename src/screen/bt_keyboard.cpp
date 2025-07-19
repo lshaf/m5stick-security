@@ -97,5 +97,5 @@ void BluetoothKeyboardScreen::destroy() {
   // Clean up resources if necessary
   StickCP2.Display.fillRect(StickCP2.Display.width() / 2 - 9, 5, 17, 8, TFT_BLACK);
   this->isConnected = false;
-  NimBLEDevice::deinit(true);
+  this->bleKeyboard.end();
 }

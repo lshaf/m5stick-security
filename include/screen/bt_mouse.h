@@ -1,7 +1,7 @@
 #pragma once
 
 #include "components/menu_manager.h"
-#include <BleMouse.h>
+#include "BleMouse.h"
 
 class BluetoothMouseScreen : public MenuManager {
 public:

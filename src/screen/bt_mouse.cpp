@@ -72,11 +72,11 @@ void BluetoothMouseScreen::handleInput() {
       this->needsRedraw = true;
     } else if (encoder.movedRight()) {
       this->bleMouse.move(0, 0, -1);
-      this->lastActivity = ACT_SCRL_UP;
+      this->lastActivity = ACT_SCRL_DOWN;
       lastActivityTime = millis();
     } else if (encoder.movedLeft()) {
       this->bleMouse.move(0, 0, 1);
-      this->lastActivity = ACT_SCRL_DOWN;
+      this->lastActivity = ACT_SCRL_UP;
       lastActivityTime = millis();
     }
 
@@ -92,5 +92,5 @@ void BluetoothMouseScreen::destroy() {
   // Clean up resources if necessary
   StickCP2.Display.fillRect(StickCP2.Display.width() / 2 - 9, 5, 17, 8, TFT_BLACK);
   this->isConnected = false;
-  NimBLEDevice::deinit(true);
+  this->bleMouse.end();
 }
