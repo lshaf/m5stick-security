@@ -1,6 +1,7 @@
 #pragma once
 
 #include "components/menu_manager.h"
+#include <BleKeyboard.h>
 
 class BluetoothKeyboardScreen : public MenuManager {
 public:
@@ -18,6 +19,7 @@ private:
     String password;
   };
 
+  BleKeyboard bleKeyboard;
   std::vector<PasswordItem> passwordItems;
   bool isConnected = false;
 

@@ -4,13 +4,14 @@
 #include "screen/main_menu.h"
 #include "components/menu_manager.h"
 #include "utility/helper.h"
-#include "LittleFS.h"
+#include <LittleFS.h>
+#include <NimBLEDevice.h>
 
 BluetoothKeyboardScreen::BluetoothKeyboardScreen() {
   this->isConnected = false;
   this->currentState = STATE_MAIN;
-  bleKeyboard.setName(config.getBleName().c_str());
-  bleKeyboard.begin();
+  this->bleKeyboard = BleKeyboard(config.getBleName().c_str(), "Espressif", 100);
+  this->bleKeyboard.begin();
 }
 
 void BluetoothKeyboardScreen::loadPasswords() {
@@ -33,7 +34,7 @@ void BluetoothKeyboardScreen::loadPasswords() {
 void BluetoothKeyboardScreen::sendPasswordToDevice(const String& password) {
   // Send the password to the connected Bluetooth device
   if (this->isConnected) {
-    bleKeyboard.print(password);
+    this->bleKeyboard.print(password);
     Helper::showAlert("Password sent");
   } else {
     Helper::showAlert("BLE not connected");
@@ -83,7 +84,7 @@ void BluetoothKeyboardScreen::updateScreen() {
 }
 
 void BluetoothKeyboardScreen::handleInput() {
-  bool bleConnected = bleKeyboard.isConnected();
+  bool bleConnected = this->bleKeyboard.isConnected();
   if (this->isConnected != bleConnected) {
     this->needsRedraw = true;
     this->isConnected = bleConnected;
@@ -96,5 +97,5 @@ void BluetoothKeyboardScreen::destroy() {
   // Clean up resources if necessary
   StickCP2.Display.fillRect(StickCP2.Display.width() / 2 - 9, 5, 17, 8, TFT_BLACK);
   this->isConnected = false;
-  bleKeyboard.end();
+  NimBLEDevice::deinit(true);
 }
