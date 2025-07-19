@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <LittleFS.h>
 #include <M5StickCPlus2.h>
+#include <BleCombo.h>
 
 #include "globals.h"
 #include "utility/screen.h"
@@ -27,16 +28,32 @@ void setup()
   StickCP2.Display.fillScreen(TFT_BLACK);
 
   StickCP2.Display.setBrightness(255 * config.getBrightness() / 100);
+  bleDevice.setName(config.getBleName().c_str());
 
   Router::setScreen(new MainMenuScreen());
 }
 
 void loop()
 {
+  static bool isScreenOff = false;;
+  static unsigned long lastUpdate = 0;
   StickCP2.update();
   encoder.updateEncoderState();
   
-  SerialCommand::listen();
-  screen.drawTimeHeader();
-  Router::handleMenu();
+  if (encoder.isMoved() || encoder.wasPressed()) {
+    lastUpdate = millis();
+    StickCP2.Display.setBrightness(255 * config.getBrightness() / 100);
+    isScreenOff = false;
+  }
+
+  if (millis() - lastUpdate > 10000 && !isScreenOff) {
+    StickCP2.Display.setBrightness(0);
+    isScreenOff = true;
+  }
+
+  if (!isScreenOff) {
+    SerialCommand::listen();
+    screen.drawTimeHeader();
+    Router::handleMenu();
+  }
 }

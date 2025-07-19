@@ -1,6 +1,7 @@
 #include "M5StickCPlus2.h"
 #include "utility/screen.h"
 #include "globals.h"
+#include <BleCombo.h>
 
 void Screen::drawHeader()
 {
@@ -9,6 +10,7 @@ void Screen::drawHeader()
   StickCP2.Display.setCursor(5, 5);
   StickCP2.Display.setTextColor(TFT_WHITE, TFT_BLACK);
   StickCP2.Display.printf("[%3d%%] ", StickCP2.Power.getBatteryLevel());
+  bleDevice.setBatteryLevel(StickCP2.Power.getBatteryLevel());
 
   // Restore text color if you print more after this
   StickCP2.Display.setTextColor(TFT_WHITE, TFT_BLACK);

@@ -1,3 +1,5 @@
+#include <BleCombo.h>
+
 #include "screen/main_menu.h"
 #include "screen/setting_menu.h"
 #include "components/router.h"
@@ -19,7 +21,7 @@ void SettingMenuScreen::handleBrightnessSetting() {
   numberPad.setOnOk([this](int value) {
     config.setBrightness(value);
     StickCP2.Display.setBrightness(255 * value / 100);
-    this->needsRedraw = true;
+    this->redrawScreen();
     this->state = MENU;
     numberPad.setOnOk([](int){});
   });
@@ -31,7 +33,8 @@ void SettingMenuScreen::handleBLENameSetting() {
   keypad.setMessage(config.getBleName());
   keypad.setOnOk([this](const String& name) {
     config.setBleName(name);
-    this->needsRedraw = true;
+    bleDevice.setName(name.c_str());
+    this->redrawScreen();
     this->state = MENU;
     keypad.setOnOk([](const String&){});
   });

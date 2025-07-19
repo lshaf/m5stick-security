@@ -13,13 +13,19 @@ private:
   enum ScreenState {
     STATE_MAIN,
     STATE_PASSWORD,
+    STATE_TACHIYOMI,
   } currentState = STATE_MAIN;
+  enum {
+    ACT_NONE,
+    ACT_SCRL_DOWN,
+    ACT_SCRL_UP
+  } lastActivity = ACT_NONE;
   struct PasswordItem {
     String label;
     String password;
   };
 
-  BleKeyboard bleKeyboard;
+  Keyboard_ bleKeyboard;
   std::vector<PasswordItem> passwordItems;
   bool isConnected = false;
 

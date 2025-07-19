@@ -15,7 +15,7 @@ private:
     STATE_TACHIYOMI,
   } currentState = STATE_MAIN;
 
-  BleMouse bleMouse;
+  Mouse_ bleMouse;
   enum {
     ACT_NONE,
     ACT_SCRL_DOWN,
