@@ -44,6 +44,7 @@ void loop()
     lastUpdate = millis();
     StickCP2.Display.setBrightness(255 * config.getBrightness() / 100);
     isScreenOff = false;
+    encoder.offLight();
   }
 
   if (millis() - lastUpdate > 10000 && !isScreenOff) {
@@ -55,5 +56,7 @@ void loop()
     SerialCommand::listen();
     screen.drawTimeHeader();
     Router::handleMenu();
+  } else {
+    encoder.breathLight();
   }
 }

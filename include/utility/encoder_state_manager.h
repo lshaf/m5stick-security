@@ -11,6 +11,9 @@ public:
   bool wasPressed() const { return _encoderButtonState == PRESSED; }
   bool wasLongPressed() const { return _encoderButtonState == LONG_PRESSED; }
 
+  void breathLight();
+  void offLight();
+
 private:
   UNIT_MINIENCODERC* mini_encoder;
   bool _isRotatedLeft = false;

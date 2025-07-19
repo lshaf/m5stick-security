@@ -38,3 +38,40 @@ EncoderStateManager::EncoderButtonState EncoderStateManager::getLatestButtonStat
   wasPressed = isEncoderPressed;
   return currentState;
 }
+
+void EncoderStateManager::breathLight() {
+  int default_delta = 4;
+  static int brightness = 0;
+  static int delta = default_delta; // Smaller value = slower fade
+  static bool waiting = false;
+  static unsigned long waitStart = 0;
+
+  if (waiting) {
+    // Wait 1 second before breathing in again
+    if (millis() - waitStart >= 1000) {
+      waiting = false;
+      delta = default_delta;
+    } else {
+      this->offLight();
+      return;
+    }
+  }
+
+  brightness += delta;
+  if (brightness >= 180) {
+    brightness = 180;
+    delta = -1; // Slow fade out (smaller absolute value)
+  } else if (brightness <= 0) {
+    brightness = 0;
+    waiting = true;
+    waitStart = millis();
+    delta = default_delta; // Reset for next fade in
+  }
+
+  uint32_t color = brightness; // Green channel
+  mini_encoder->setLEDColor(color);
+}
+
+void EncoderStateManager::offLight() {
+  mini_encoder->setLEDColor(0x000000);
+}
