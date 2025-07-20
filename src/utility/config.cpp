@@ -24,6 +24,8 @@ void Config::load() {
       brightness = value.toInt();
     } else if (key == "bleName") {
       bleName = value;
+    } else if (key == "fingerLockEnabled") {
+      fingerLockEnabled = (value == "true");
     }
   }
   file.close();
@@ -35,6 +37,7 @@ void Config::save() {
   if (!file) return;
   file.printf("brightness=%u\n", brightness);
   file.printf("bleName=%s\n", bleName.c_str());
+  file.printf("fingerLockEnabled=%s\n", fingerLockEnabled ? "true" : "false");
   file.close();
 }
 
@@ -64,4 +67,13 @@ void Config::setBleName(const String& name) {
 
 String Config::getBleName() const {
   return bleName;
+}
+
+void Config::setFingerLockEnabled(bool enabled) {
+  fingerLockEnabled = enabled;
+  save();
+}
+
+bool Config::isFingerLockEnabled() const {
+  return fingerLockEnabled;
 }

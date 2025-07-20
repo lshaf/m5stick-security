@@ -8,11 +8,11 @@
 #include "utility/encoder_state_manager.h"
 #include "utility/serial_command.h"
 
+#include "screen/lock.h"
 #include "screen/main_menu.h"
 #include "components/router.h"
 
 Screen screen;
-MenuManager* mainMenu = nullptr;
 
 UNIT_MINIENCODERC mini_encoder;
 EncoderStateManager encoder(mini_encoder);
@@ -22,6 +22,18 @@ void setup()
   StickCP2.begin();
   LittleFS.begin();
   Serial.begin(115200);
+  
+  StickCP2.Display.setTextSize(1);
+  StickCP2.Display.setTextColor(TFT_WHITE, TFT_BLACK);
+  StickCP2.Display.drawCenterString("Init finger sensor", 
+    StickCP2.Display.width() / 2, 
+    StickCP2.Display.height() / 2
+  );
+  while (!finger.begin(&Serial2, FINGER_PRINT_RX, FINGER_PRINT_TX, 19200)) {
+    Serial.println("Connecting to finger sensor...");
+    delay(500);
+  }
+  
   mini_encoder.begin(&Wire, MINIENCODERC_ADDR, 0, 26, 100000UL);
 
   StickCP2.Display.setTextColor(TFT_WHITE, TFT_BLACK);
@@ -30,7 +42,11 @@ void setup()
   StickCP2.Display.setBrightness(255 * config.getBrightness() / 100);
   bleDevice.setName(config.getBleName().c_str());
 
-  Router::setScreen(new MainMenuScreen());
+  if (config.isFingerLockEnabled()) {
+    Router::setScreen(new LockScreen());
+  } else {
+    Router::setScreen(new MainMenuScreen());
+  }
 }
 
 void loop()
@@ -39,8 +55,11 @@ void loop()
   static unsigned long lastUpdate = 0;
   StickCP2.update();
   encoder.updateEncoderState();
+
+  MenuScreen* current = Router::getCurrentScreen();
+  bool isAlwaysOn = current && current->isScreenAlwaysOn();
   
-  if (encoder.isMoved() || encoder.wasPressed()) {
+  if (encoder.isMoved() || encoder.wasPressed() || isAlwaysOn) {
     lastUpdate = millis();
     StickCP2.Display.setBrightness(255 * config.getBrightness() / 100);
     isScreenOff = false;

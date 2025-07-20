@@ -68,6 +68,7 @@ void NumberPad::handleInput() {
   if (encoder.movedRight()) setValue(currentValue + 1);
   if (encoder.wasPressed()) {
     if (onOkCallback) {
+      StickCP2.Display.fillRect(0, 18, StickCP2.Display.width(), StickCP2.Display.height() - 18, TFT_BLACK);
       onOkCallback(currentValue);
     }
   }

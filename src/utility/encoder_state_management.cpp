@@ -47,8 +47,8 @@ void EncoderStateManager::breathLight() {
   static unsigned long waitStart = 0;
 
   if (waiting) {
-    // Wait 1 second before breathing in again
-    if (millis() - waitStart >= 1000) {
+    // Wait 1.5 seconds before breathing in again
+    if (millis() - waitStart >= 1500) {
       waiting = false;
       delta = default_delta;
     } else {
@@ -58,8 +58,8 @@ void EncoderStateManager::breathLight() {
   }
 
   brightness += delta;
-  if (brightness >= 180) {
-    brightness = 180;
+  if (brightness >= 100) {
+    brightness = 100;
     delta = -1; // Slow fade out (smaller absolute value)
   } else if (brightness <= 0) {
     brightness = 0;
