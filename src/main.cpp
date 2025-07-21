@@ -24,16 +24,13 @@ void setup()
   Serial.begin(115200);
   
   StickCP2.Display.setTextSize(1);
-  StickCP2.Display.setTextColor(TFT_WHITE, TFT_BLACK);
-  StickCP2.Display.drawCenterString("Init finger sensor", 
+  StickCP2.Display.setTextColor(SELECTED_COLOR, TFT_BLACK);
+  StickCP2.Display.drawCenterString("Booting", 
     StickCP2.Display.width() / 2, 
     StickCP2.Display.height() / 2
   );
-  while (!finger.begin(&Serial2, FINGER_PRINT_RX, FINGER_PRINT_TX, 19200)) {
-    Serial.println("Connecting to finger sensor...");
-    delay(500);
-  }
-  
+
+  finger.begin(&Serial2, FINGER_PRINT_RX, FINGER_PRINT_TX, 19200);
   mini_encoder.begin(&Wire, MINIENCODERC_ADDR, 0, 26, 100000UL);
 
   StickCP2.Display.setTextColor(TFT_WHITE, TFT_BLACK);

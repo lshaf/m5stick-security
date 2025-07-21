@@ -27,31 +27,19 @@ void SettingMenuScreen::handleMainMenu(bool redraw) {
     {"Brightness", [this]() { this->handleBrightnessSetting(); }},
     {"BLE Name", [this]() { this->handleBLENameSetting(); }},
     {"Finger Lock", [this]() {
+      int retried = 0;
       while (finger.getUserCount() == 0xff) {
         Helper::showAlert("Wait for fingerprint");
+        retried++;
+        if (retried > 5) {
+          Helper::showAlert("Cannot find device");
+          return;
+        }
       }
 
       this->selected = 0;
       this->state = SET_FINGER_LOCK; 
       this->redrawScreen(); 
-    }},
-    {"Finger Check", [this]() {
-      if (!config.isFingerLockEnabled()) {
-        Helper::showAlert("Finger Lock disabled");
-        return;
-      }
-
-      Helper::showAlert("Put your finger");
-      uint8_t res = finger.available();
-      if (res == ACK_SUCCESS) {
-        Helper::showAlert("Finger recognized");
-      } else if (res == ACK_FAIL) {
-        Helper::showAlert("Finger not recognized");
-      } else {
-        Helper::showAlert("Error reading finger");
-      }
-
-      this->handleMainMenu();
     }},
     {"Back", []() { Router::setScreen(new MainMenuScreen()); }},
   };
@@ -77,19 +65,37 @@ void SettingMenuScreen::handleFingerLockSetting() {
   static int localState = 0;
 
   if (localState == 0) {
-    this->title = "Use Finger Lock?";
+    this->title = "Fingerprint Lock";
     this->menuItems = {
-      {"Yes", [this]() {
+      {"Check Fingerprint", [this]() {
+        if (!config.isFingerLockEnabled()) {
+          Helper::showAlert("Finger Lock disabled");
+          return;
+        }
+
+        Helper::showAlert("Put your finger");
+        uint8_t res = finger.available();
+        if (res == ACK_SUCCESS) {
+          Helper::showAlert("Finger recognized");
+        } else if (res == ACK_FAIL) {
+          Helper::showAlert("Finger not recognized");
+        } else {
+          Helper::showAlert("Error reading finger");
+        }
+
+        this->handleMainMenu();
+      }},
+      {"Set Fingerprint", [this]() {
         localState = 1;
         this->redrawScreen();
       }},
-      {"No", [this]() {
+      {"Remove Lock", [this]() {
         config.setFingerLockEnabled(false);
         finger.delAllFinger();
         // finger.sleep();
 
         this->handleMainMenu();
-      }}
+      }},
     };
 
     MenuManager::renderMenu();
