@@ -9,11 +9,31 @@ public:
   void updateScreen() override;
   void handleInput() override;
   void destroy() override;
+  virtual bool isScreenAlwaysOn() const { 
+    if (this->currentState == this->STATE_PC) {
+      return true;
+    }
+
+    return false; 
+  }
 private:
   enum ScreenState {
     STATE_MAIN,
     STATE_TACHIYOMI,
+    STATE_PC,
   } currentState = STATE_MAIN;
+
+  struct ImuData {
+    float x;
+    float y;
+    float z;
+  };
+  struct UpdateImuData {
+    ImuData previous;
+    ImuData current;
+  } currentImuData;
+  uint8_t acceleration = 30;
+  UpdateImuData dotPosition();
 
   Mouse_ bleMouse;
   enum {

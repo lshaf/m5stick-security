@@ -7,7 +7,7 @@ public:
   void updateEncoderState();
   bool movedLeft() const { return _isRotatedLeft; }
   bool movedRight() const { return _isRotatedRight; }
-  bool isMoved() const { return _isRotatedLeft || _isRotatedRight; }
+  bool wasMoved() const { return _isRotatedLeft || _isRotatedRight; }
   bool wasPressed() const { return _encoderButtonState == PRESSED; }
   bool wasLongPressed() const { return _encoderButtonState == LONG_PRESSED; }
 

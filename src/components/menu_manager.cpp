@@ -38,6 +38,6 @@ void MenuManager::handleInput() {
   if (selected < 0) selected = menuItems.size() - 1;
   if (selected >= (int) menuItems.size()) selected = 0;
 
-  if (encoder.isMoved()) this->redrawScreen();
+  if (encoder.wasMoved()) this->redrawScreen();
   if (encoder.wasPressed()) menuItems[selected].onSelect();
 }

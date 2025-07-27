@@ -137,7 +137,7 @@ void Keypad::handleInput() {
     selectedCol = selectedCol + 1;
     if (selectedRow == 0 && selectedCol == 1) selectedCol = 2;
   }
-  if (encoder.isMoved()) {
+  if (encoder.wasMoved()) {
     if (selectedCol < 0) {
       selectedRow--;
       selectedCol = NUM_COLS - 1;

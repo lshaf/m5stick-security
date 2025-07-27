@@ -19,7 +19,8 @@ EncoderStateManager encoder(mini_encoder);
 
 void setup()
 {
-  StickCP2.begin();
+  auto cfg = M5.config();
+  StickCP2.begin(cfg);
   LittleFS.begin();
   Serial.begin(115200);
   
@@ -30,7 +31,7 @@ void setup()
     StickCP2.Display.height() / 2
   );
 
-  finger.begin(&Serial2, FINGER_PRINT_RX, FINGER_PRINT_TX, 19200);
+  // finger.begin(&Serial2, FINGER_PRINT_RX, FINGER_PRINT_TX, 19200);
   mini_encoder.begin(&Wire, MINIENCODERC_ADDR, 0, 26, 100000UL);
 
   StickCP2.Display.setTextColor(TFT_WHITE, TFT_BLACK);
@@ -50,13 +51,14 @@ void loop()
 {
   static bool isScreenOff = false;;
   static unsigned long lastUpdate = 0;
+  static bool switchAlwaysOn = false;
   StickCP2.update();
   encoder.updateEncoderState();
 
   MenuScreen* current = Router::getCurrentScreen();
   bool isAlwaysOn = current && current->isScreenAlwaysOn();
-  
-  if (encoder.isMoved() || encoder.wasPressed() || isAlwaysOn) {
+
+  if (encoder.wasMoved() || encoder.wasPressed() || isAlwaysOn) {
     lastUpdate = millis();
     StickCP2.Display.setBrightness(255 * config.getBrightness() / 100);
     isScreenOff = false;

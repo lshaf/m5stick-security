@@ -25,6 +25,11 @@ void BluetoothMouseScreen::updateScreen() {
         this->currentState = STATE_TACHIYOMI;
         this->redrawScreen();
       }},
+      {"PC Mouse", [this]() {
+        this->selected = 0; // Reset selection
+        this->currentState = STATE_PC;
+        this->redrawScreen();
+      }},
       {"Back", []() { Router::setScreen(new MainMenuScreen()); }},
     };
   } else if (currentState == STATE_TACHIYOMI) {
@@ -51,9 +56,40 @@ void BluetoothMouseScreen::updateScreen() {
       StickCP2.Display.width() / 2, 
       137
     );
+  } else if (currentState == STATE_PC) {
+    this->title = "PC Mouse";
+    menuItems.clear();
+    StickCP2.Display.setTextSize(1);
+    StickCP2.Display.setTextColor(TFT_WHITE, TFT_BLACK);
+    StickCP2.Display.drawCenterString(
+      "Hold Encoder to Quit", 
+      StickCP2.Display.width() / 2, 
+      StickCP2.Display.height() - 13
+    );
   }
 
   BluetoothMouseScreen::renderMenu();
+}
+
+BluetoothMouseScreen::UpdateImuData BluetoothMouseScreen::dotPosition() {
+  UpdateImuData result;
+  currentImuData.previous = currentImuData.current;
+  StickCP2.Imu.getAccelData(&currentImuData.current.x, &currentImuData.current.y, &currentImuData.current.z);
+
+  auto boxSize = StickCP2.Display.width() - 10;
+  auto centerXBox = 5 + boxSize / 2;
+  auto centerYBox = 32 + boxSize / 2;
+
+  result.previous.x = centerXBox + ((currentImuData.previous.x * -1) * (boxSize / 2));
+  result.previous.y = centerYBox + (currentImuData.previous.y * (boxSize / 2));
+  result.current.x = centerXBox + ((currentImuData.current.x * -1) * (boxSize / 2));
+  result.current.y = centerYBox + (currentImuData.current.y * (boxSize / 2));
+
+  auto moveX = (currentImuData.current.x * -1) * this->acceleration;
+  auto moveY = currentImuData.current.y * this->acceleration;
+  this->bleMouse.move(moveX, moveY, 0);
+
+  return result;
 }
 
 void BluetoothMouseScreen::handleInput() {
@@ -80,10 +116,42 @@ void BluetoothMouseScreen::handleInput() {
       lastActivityTime = millis();
     }
 
-    if (encoder.isMoved()) this->redrawScreen(false);
+    if (encoder.wasMoved()) this->redrawScreen(false);
     if (millis() - lastActivityTime > 500 && this->lastActivity != ACT_NONE) {
       this->lastActivity = ACT_NONE;
       this->redrawScreen(false);
+    }
+  } else if (this->currentState == STATE_PC) {
+    // Handle PC mouse mode input
+    if (encoder.wasPressed()) {
+      this->bleMouse.click(MOUSE_LEFT);
+    } else if (encoder.movedLeft()) {
+      this->acceleration -= 2;
+    } else if (encoder.movedRight()) {
+      this->acceleration += 2;
+    }
+
+    if (encoder.wasMoved()) {
+      if (this->acceleration <= 2) this->acceleration = 2;
+      if (this->acceleration >= 60) this->acceleration = 60;
+
+      StickCP2.Display.setTextSize(2);
+      StickCP2.Display.setTextColor(TFT_WHITE, TFT_BLACK);
+      String printedAccel = (this->acceleration < 10 ? "0" : "") + String(this->acceleration);
+      StickCP2.Display.drawCenterString(printedAccel, StickCP2.Display.width() / 2, 32 + StickCP2.Display.width() + 5);
+    }
+
+    auto imu_update = StickCP2.Imu.update();
+    if (imu_update) {
+      auto dot = this->dotPosition();
+      StickCP2.Display.fillCircle(dot.previous.x, dot.previous.y, 2, TFT_BLACK);
+      StickCP2.Display.drawRect(5, 32, StickCP2.Display.width() - 10, StickCP2.Display.width() - 10, SELECTED_COLOR);
+      StickCP2.Display.fillCircle(dot.current.x, dot.current.y, 2, SELECTED_COLOR);
+    }
+
+    if (encoder.wasLongPressed()) {
+      this->currentState = STATE_MAIN;
+      this->redrawScreen();
     }
   }
 }

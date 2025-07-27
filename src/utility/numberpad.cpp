@@ -73,7 +73,7 @@ void NumberPad::handleInput() {
     }
   }
 
-  if (encoder.wasPressed() || encoder.isMoved()) {
+  if (encoder.wasPressed() || encoder.wasMoved()) {
     updateScreen();
   }
 }

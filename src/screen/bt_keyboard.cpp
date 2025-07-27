@@ -136,7 +136,7 @@ void BluetoothKeyboardScreen::handleInput() {
       lastActivityTime = millis();
     }
 
-    if (encoder.isMoved()) this->redrawScreen(false);
+    if (encoder.wasMoved()) this->redrawScreen(false);
     if (millis() - lastActivityTime > 500 && this->lastActivity != ACT_NONE) {
       this->lastActivity = ACT_NONE;
       this->redrawScreen(false);
