@@ -133,6 +133,10 @@ void BluetoothMouseScreen::handleInput() {
       this->acceleration += 2;
     }
 
+    if (M5.BtnA.wasPressed()) {
+      this->bleMouse.click(MOUSE_RIGHT);
+    }
+
     if (encoder.wasMoved()) {
       if (this->acceleration <= 2) this->acceleration = 2;
       if (this->acceleration >= 60) this->acceleration = 60;

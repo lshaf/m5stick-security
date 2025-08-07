@@ -1,5 +1,5 @@
 #include "components/menu_screen.h"
-#include "M5StickCPlus2.h"
+#include <M5Unified.h>
 
 bool MenuScreen::needsRedraw() {
   if (this->triggerRedraw) {
@@ -12,7 +12,7 @@ bool MenuScreen::needsRedraw() {
 
 void MenuScreen::redrawScreen(bool clear) {
   if (clear) {
-    StickCP2.Display.fillRect(0, 13, StickCP2.Display.width(), StickCP2.Display.height(), TFT_BLACK);
+    M5.Lcd.fillRect(0, 13, M5.Lcd.width(), M5.Lcd.height(), TFT_BLACK);
   }
   
   this->triggerRedraw = true;

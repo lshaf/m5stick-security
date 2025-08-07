@@ -1,5 +1,4 @@
 #include "components/router.h"
-#include "M5StickCPlus2.h"
 
 MenuScreen* Router::currentScreen = nullptr;
 

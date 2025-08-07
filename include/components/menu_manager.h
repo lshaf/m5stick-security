@@ -2,6 +2,7 @@
 #include "menu_screen.h"
 #include <vector>
 #include <functional>
+#include <Arduino.h>
 
 struct MenuItem {
     const char* label;
