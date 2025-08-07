@@ -1,4 +1,4 @@
-#include <M5StickCPlus2.h>
+#include <M5Unified.h>
 #include "utility/keypad.h"
 #include "globals.h"
 #include "Unit_MiniEncoderC.h"
@@ -45,20 +45,20 @@ void Keypad::show(String title, int maxLength) {
   this->selectedCol = 0;
   this->selectedRow = 0;
 
-  StickCP2.Display.fillRect(0, 18, StickCP2.Display.width(), StickCP2.Display.height() - 18, TFT_BLACK);
+  M5.Lcd.fillRect(0, 18, M5.Lcd.width(), M5.Lcd.height() - 18, TFT_BLACK);
   updateScreen();
 }
 
 void Keypad::updateScreen() {
-  StickCP2.Display.setTextSize(1);
-  int btnW = (StickCP2.Display.width() - (6 * NUM_COLS)) / NUM_COLS, btnH = 25, x0 = 5, y0 = StickCP2.Display.height() - (NUM_ROWS * (btnH + 5));
+  M5.Lcd.setTextSize(1);
+  int btnW = (M5.Lcd.width() - (6 * NUM_COLS)) / NUM_COLS, btnH = 25, x0 = 5, y0 = M5.Lcd.height() - (NUM_ROWS * (btnH + 5));
   for (int col = 0; col < 3; ++col) {
     if (strlen(TOP_BUTTONS[col]) > 0) {
       uint16_t color = (selectedRow == 0 && selectedCol == col) ? SELECTED_COLOR : TFT_WHITE;
-      StickCP2.Display.drawRect(x0 + col * (btnW + 5), y0, btnW, btnH, color);
-      StickCP2.Display.setCursor(x0 + col * (btnW + 5) + 6, y0 + 6);
-      StickCP2.Display.setTextColor(color, TFT_BLACK);
-      StickCP2.Display.print(TOP_BUTTONS[col]);
+      M5.Lcd.drawRect(x0 + col * (btnW + 5), y0, btnW, btnH, color);
+      M5.Lcd.setCursor(x0 + col * (btnW + 5) + 6, y0 + 6);
+      M5.Lcd.setTextColor(color, TFT_BLACK);
+      M5.Lcd.print(TOP_BUTTONS[col]);
     }
   }
   // Draw keypad buttons
@@ -76,51 +76,51 @@ void Keypad::updateScreen() {
       uint16_t fillColor = isActive ? TFT_WHITE : TFT_BLACK;
       uint16_t textColor = isActive ? TFT_BLACK : color;
 
-      StickCP2.Display.fillRect(x, y, btnW, btnH, fillColor);
-      StickCP2.Display.drawRect(x, y, btnW, btnH, color);
-      StickCP2.Display.setCursor(x + 6, y + 6);
-      StickCP2.Display.setTextColor(textColor, fillColor);
+      M5.Lcd.fillRect(x, y, btnW, btnH, fillColor);
+      M5.Lcd.drawRect(x, y, btnW, btnH, color);
+      M5.Lcd.setCursor(x + 6, y + 6);
+      M5.Lcd.setTextColor(textColor, fillColor);
 
       if (isNumKey) {
-        StickCP2.Display.print("NUM");
+        M5.Lcd.print("NUM");
       } else if (isCapsKey) {
-        StickCP2.Display.print("CAPS");
+        M5.Lcd.print("CAPS");
       } else {
         String label = KEYPAD_LAYOUT[row][col];
         if (numMode) {
-          StickCP2.Display.print(label[label.length() - 1]);
+          M5.Lcd.print(label[label.length() - 1]);
         } else if (capsMode && row < 3) {
           String upLabel = label;
           upLabel.toUpperCase();
-          StickCP2.Display.print(upLabel);
+          M5.Lcd.print(upLabel);
         } else {
-          StickCP2.Display.print(label);
+          M5.Lcd.print(label);
         }
       }
     }
   }
 
   if (this->title.length() > 0) {
-    StickCP2.Display.setTextSize(1);
-    StickCP2.Display.fillRect(5, 16, StickCP2.Display.width() - 10, StickCP2.Display.fontHeight() + 4, TFT_BLACK);
-    StickCP2.Display.setTextColor(TFT_WHITE, TFT_BLACK);
-    StickCP2.Display.drawCenterString(this->title, StickCP2.Display.width() / 2, 18);
+    M5.Lcd.setTextSize(1);
+    M5.Lcd.fillRect(5, 16, M5.Lcd.width() - 10, M5.Lcd.fontHeight() + 4, TFT_BLACK);
+    M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
+    M5.Lcd.drawCenterString(this->title, M5.Lcd.width() / 2, 18);
   }
 
   // Draw message at the top
   if (printedMessage != message) {
     int yText = 30;
     int xPadding = 5;
-    StickCP2.Display.setTextSize(2);
-    StickCP2.Display.fillRect(0, yText, StickCP2.Display.width(), StickCP2.Display.fontHeight() * 3, TFT_BLACK);
-    StickCP2.Display.setTextColor(TFT_WHITE, TFT_BLACK);
+    M5.Lcd.setTextSize(2);
+    M5.Lcd.fillRect(0, yText, M5.Lcd.width(), M5.Lcd.fontHeight() * 3, TFT_BLACK);
+    M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
     // Print message in lines of 10 chars, with left padding
     for (int i = 0; i < message.length(); i += 10) {
-      StickCP2.Display.setCursor(xPadding, yText + (i / 10) * StickCP2.Display.fontHeight());
-      StickCP2.Display.print(message.substring(i, i + 10));
+      M5.Lcd.setCursor(xPadding, yText + (i / 10) * M5.Lcd.fontHeight());
+      M5.Lcd.print(message.substring(i, i + 10));
     }
 
-    StickCP2.Display.setTextSize(1);
+    M5.Lcd.setTextSize(1);
     printedMessage = message;
   }
 }

@@ -7,6 +7,7 @@
 #include <LittleFS.h>
 #include <NimBLEDevice.h>
 #include <BleCombo.h>
+#include <M5Unified.h>
 
 BluetoothKeyboardScreen::BluetoothKeyboardScreen() {
   this->isConnected = false;
@@ -43,8 +44,8 @@ void BluetoothKeyboardScreen::sendPasswordToDevice(const String& password) {
 
 void BluetoothKeyboardScreen::updateScreen() {
   // Update the screen with the current state of the Bluetooth keyboard
-  StickCP2.Display.setTextColor(this->isConnected ? TFT_GREEN : TFT_RED, TFT_BLACK);
-  StickCP2.Display.drawCenterString("BLE", StickCP2.Display.width() / 2, 5);
+  M5.Lcd.setTextColor(this->isConnected ? TFT_GREEN : TFT_RED, TFT_BLACK);
+  M5.Lcd.drawCenterString("BLE", M5.Lcd.width() / 2, 5);
 
   if (currentState == STATE_MAIN) {
     this->title = "BLE Keyboard";
@@ -86,25 +87,25 @@ void BluetoothKeyboardScreen::updateScreen() {
   } else if (currentState == STATE_TACHIYOMI) {
     this->title = "Tachiyomi";
     menuItems.clear();
-    StickCP2.Display.setTextSize(1);
-    StickCP2.Display.setTextColor(TFT_WHITE, TFT_BLACK);
-    StickCP2.Display.drawCenterString(
+    M5.Lcd.setTextSize(1);
+    M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
+    M5.Lcd.drawCenterString(
       "Hold Encoder to Quit", 
-      StickCP2.Display.width() / 2, 
-      StickCP2.Display.height() - 13
+      M5.Lcd.width() / 2, 
+      M5.Lcd.height() - 13
     );
 
-    StickCP2.Display.setTextSize(2);
-    StickCP2.Display.setTextColor(this->lastActivity == ACT_SCRL_UP ? SELECTED_COLOR : TFT_WHITE, TFT_BLACK);
-    StickCP2.Display.drawCenterString(
+    M5.Lcd.setTextSize(2);
+    M5.Lcd.setTextColor(this->lastActivity == ACT_SCRL_UP ? SELECTED_COLOR : TFT_WHITE, TFT_BLACK);
+    M5.Lcd.drawCenterString(
       "UP", 
-      StickCP2.Display.width() / 2, 
+      M5.Lcd.width() / 2, 
       70
     );
-    StickCP2.Display.setTextColor(this->lastActivity == ACT_SCRL_DOWN ? SELECTED_COLOR : TFT_WHITE, TFT_BLACK);
-    StickCP2.Display.drawCenterString(
+    M5.Lcd.setTextColor(this->lastActivity == ACT_SCRL_DOWN ? SELECTED_COLOR : TFT_WHITE, TFT_BLACK);
+    M5.Lcd.drawCenterString(
       "DOWN", 
-      StickCP2.Display.width() / 2, 
+      M5.Lcd.width() / 2, 
       137
     );
   }
@@ -148,7 +149,7 @@ void BluetoothKeyboardScreen::handleInput() {
 
 void BluetoothKeyboardScreen::destroy() {
   // Clean up resources if necessary
-  StickCP2.Display.fillRect(StickCP2.Display.width() / 2 - 9, 5, 17, 8, TFT_BLACK);
+  M5.Lcd.fillRect(M5.Lcd.width() / 2 - 9, 5, 17, 8, TFT_BLACK);
   this->isConnected = false;
   // this->bleKeyboard.end();
 }

@@ -1,4 +1,5 @@
 #include <BleCombo.h>
+#include <M5Unified.h>
 
 #include "utility/helper.h"
 #include "screen/main_menu.h"
@@ -10,7 +11,7 @@ SettingMenuScreen::SettingMenuScreen() {
   this->handleMainMenu(false);
   numberPad.setOnOk([this](int value) {
     config.setBrightness(value);
-    StickCP2.Display.setBrightness(255 * value / 100);
+    M5.Lcd.setBrightness(255 * value / 100);
     this->handleMainMenu();
   });
   keypad.setOnOk([this](const String& name) {
@@ -103,7 +104,7 @@ void SettingMenuScreen::handleFingerLockSetting() {
     finger.delAllFinger();
     this->title = "Register Finger Print";
     this->menuItems.clear();
-    auto d = StickCP2.Display;
+    auto d = M5.Lcd;
 
     d.setTextSize(1);
     d.setTextColor(TFT_WHITE, TFT_BLACK);

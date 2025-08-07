@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include <LittleFS.h>
-#include <M5StickCPlus2.h>
+#include <M5Unified.h>
 #include <BleCombo.h>
 
 #include "globals.h"
@@ -19,25 +19,25 @@ EncoderStateManager encoder(mini_encoder);
 
 void setup()
 {
-  auto cfg = M5.config();
-  StickCP2.begin(cfg);
+  auto cf = M5.config();
+  M5.begin(cf);
   LittleFS.begin();
   Serial.begin(115200);
   
-  StickCP2.Display.setTextSize(1);
-  StickCP2.Display.setTextColor(SELECTED_COLOR, TFT_BLACK);
-  StickCP2.Display.drawCenterString("Booting", 
-    StickCP2.Display.width() / 2, 
-    StickCP2.Display.height() / 2
+  M5.Lcd.setTextSize(1);
+  M5.Lcd.setTextColor(SELECTED_COLOR, TFT_BLACK);
+  M5.Lcd.drawCenterString("Booting", 
+    M5.Lcd.width() / 2, 
+    M5.Lcd.height() / 2
   );
 
   // finger.begin(&Serial2, FINGER_PRINT_RX, FINGER_PRINT_TX, 19200);
   mini_encoder.begin(&Wire, MINIENCODERC_ADDR, 0, 26, 100000UL);
 
-  StickCP2.Display.setTextColor(TFT_WHITE, TFT_BLACK);
-  StickCP2.Display.fillScreen(TFT_BLACK);
+  M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
+  M5.Lcd.fillScreen(TFT_BLACK);
 
-  StickCP2.Display.setBrightness(255 * config.getBrightness() / 100);
+  M5.Lcd.setBrightness(255 * config.getBrightness() / 100);
   bleDevice.setName(config.getBleName().c_str());
 
   if (config.isFingerLockEnabled()) {
@@ -51,8 +51,7 @@ void loop()
 {
   static bool isScreenOff = false;;
   static unsigned long lastUpdate = 0;
-  static bool switchAlwaysOn = false;
-  StickCP2.update();
+  M5.update();
   encoder.updateEncoderState();
 
   MenuScreen* current = Router::getCurrentScreen();
@@ -60,13 +59,13 @@ void loop()
 
   if (encoder.wasMoved() || encoder.wasPressed() || isAlwaysOn) {
     lastUpdate = millis();
-    StickCP2.Display.setBrightness(255 * config.getBrightness() / 100);
+    M5.Lcd.setBrightness(255 * config.getBrightness() / 100);
     isScreenOff = false;
     encoder.offLight();
   }
 
   if (millis() - lastUpdate > 10000 && !isScreenOff) {
-    StickCP2.Display.setBrightness(0);
+    M5.Lcd.setBrightness(0);
     isScreenOff = true;
   }
 

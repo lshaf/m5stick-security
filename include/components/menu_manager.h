@@ -2,7 +2,6 @@
 #include "menu_screen.h"
 #include <vector>
 #include <functional>
-#include <M5StickCPlus2.h>
 
 struct MenuItem {
     const char* label;

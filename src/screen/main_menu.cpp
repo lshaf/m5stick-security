@@ -5,6 +5,7 @@
 #include "screen/setting_menu.h"
 #include "screen/battery.h"
 #include "components/router.h"
+#include <M5Unified.h>
 
 MainMenuScreen::MainMenuScreen() {
     this->title = "Main Menu";
@@ -14,6 +15,6 @@ MainMenuScreen::MainMenuScreen() {
       {"Game", []() { Router::setScreen(new GameMenuScreen()); }},
       {"Settings", []() { Router::setScreen(new SettingMenuScreen()); }},
       {"Battery Info", []() { Router::setScreen(new BatteryScreen()); }},
-      {"Power Off", []() { StickCP2.Power.powerOff(); }},
+      {"Power Off", []() { M5.Power.powerOff(); }},
     };
 }

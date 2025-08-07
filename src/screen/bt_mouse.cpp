@@ -5,6 +5,7 @@
 #include "utility/helper.h"
 #include <LittleFS.h>
 #include <NimBLEDevice.h>
+#include <M5Unified.h>
 
 BluetoothMouseScreen::BluetoothMouseScreen() {
   this->isConnected = false;
@@ -14,9 +15,9 @@ BluetoothMouseScreen::BluetoothMouseScreen() {
 
 void BluetoothMouseScreen::updateScreen() {
   // Update the screen with the current state of the Bluetooth mouse
-  StickCP2.Display.setTextSize(1);
-  StickCP2.Display.setTextColor(this->isConnected ? TFT_GREEN : TFT_RED, TFT_BLACK);
-  StickCP2.Display.drawCenterString("BLE", StickCP2.Display.width() / 2, 5);
+  M5.Lcd.setTextSize(1);
+  M5.Lcd.setTextColor(this->isConnected ? TFT_GREEN : TFT_RED, TFT_BLACK);
+  M5.Lcd.drawCenterString("BLE", M5.Lcd.width() / 2, 5);
 
   if (currentState == STATE_MAIN) {
     this->title = "BLE Mouse";
@@ -36,36 +37,36 @@ void BluetoothMouseScreen::updateScreen() {
   } else if (currentState == STATE_TACHIYOMI) {
     this->title = "Tachiyomi";
     menuItems.clear();
-    StickCP2.Display.setTextSize(1);
-    StickCP2.Display.setTextColor(TFT_WHITE, TFT_BLACK);
-    StickCP2.Display.drawCenterString(
+    M5.Lcd.setTextSize(1);
+    M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
+    M5.Lcd.drawCenterString(
       "Hold Encoder to Quit", 
-      StickCP2.Display.width() / 2, 
-      StickCP2.Display.height() - 13
+      M5.Lcd.width() / 2, 
+      M5.Lcd.height() - 13
     );
 
-    StickCP2.Display.setTextSize(2);
-    StickCP2.Display.setTextColor(this->lastActivity == ACT_SCRL_UP ? SELECTED_COLOR : TFT_WHITE, TFT_BLACK);
-    StickCP2.Display.drawCenterString(
+    M5.Lcd.setTextSize(2);
+    M5.Lcd.setTextColor(this->lastActivity == ACT_SCRL_UP ? SELECTED_COLOR : TFT_WHITE, TFT_BLACK);
+    M5.Lcd.drawCenterString(
       "UP", 
-      StickCP2.Display.width() / 2, 
+      M5.Lcd.width() / 2, 
       70
     );
-    StickCP2.Display.setTextColor(this->lastActivity == ACT_SCRL_DOWN ? SELECTED_COLOR : TFT_WHITE, TFT_BLACK);
-    StickCP2.Display.drawCenterString(
+    M5.Lcd.setTextColor(this->lastActivity == ACT_SCRL_DOWN ? SELECTED_COLOR : TFT_WHITE, TFT_BLACK);
+    M5.Lcd.drawCenterString(
       "DOWN", 
-      StickCP2.Display.width() / 2, 
+      M5.Lcd.width() / 2, 
       137
     );
   } else if (currentState == STATE_PC) {
     this->title = "PC Mouse";
     menuItems.clear();
-    StickCP2.Display.setTextSize(1);
-    StickCP2.Display.setTextColor(TFT_WHITE, TFT_BLACK);
-    StickCP2.Display.drawCenterString(
+    M5.Lcd.setTextSize(1);
+    M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
+    M5.Lcd.drawCenterString(
       "Hold Encoder to Quit", 
-      StickCP2.Display.width() / 2, 
-      StickCP2.Display.height() - 13
+      M5.Lcd.width() / 2, 
+      M5.Lcd.height() - 13
     );
   }
 
@@ -75,9 +76,9 @@ void BluetoothMouseScreen::updateScreen() {
 BluetoothMouseScreen::UpdateImuData BluetoothMouseScreen::dotPosition() {
   UpdateImuData result;
   currentImuData.previous = currentImuData.current;
-  StickCP2.Imu.getAccelData(&currentImuData.current.x, &currentImuData.current.y, &currentImuData.current.z);
+  M5.Imu.getAccelData(&currentImuData.current.x, &currentImuData.current.y, &currentImuData.current.z);
 
-  auto boxSize = StickCP2.Display.width() - 10;
+  auto boxSize = M5.Lcd.width() - 10;
   auto centerXBox = 5 + boxSize / 2;
   auto centerYBox = 32 + boxSize / 2;
 
@@ -137,17 +138,17 @@ void BluetoothMouseScreen::handleInput() {
       if (this->acceleration >= 60) this->acceleration = 60;
     }
 
-    auto imu_update = StickCP2.Imu.update();
+    auto imu_update = M5.Imu.update();
     if (imu_update) {
       auto dot = this->dotPosition();
-      StickCP2.Display.fillCircle(dot.previous.x, dot.previous.y, 2, TFT_BLACK);
-      StickCP2.Display.drawRect(5, 32, StickCP2.Display.width() - 10, StickCP2.Display.width() - 10, SELECTED_COLOR);
-      StickCP2.Display.fillCircle(dot.current.x, dot.current.y, 2, SELECTED_COLOR);
+      M5.Lcd.fillCircle(dot.previous.x, dot.previous.y, 2, TFT_BLACK);
+      M5.Lcd.drawRect(5, 32, M5.Lcd.width() - 10, M5.Lcd.width() - 10, SELECTED_COLOR);
+      M5.Lcd.fillCircle(dot.current.x, dot.current.y, 2, SELECTED_COLOR);
 
-      StickCP2.Display.setTextSize(2);
-      StickCP2.Display.setTextColor(TFT_WHITE, TFT_BLACK);
+      M5.Lcd.setTextSize(2);
+      M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
       String printedAccel = (this->acceleration < 10 ? "0" : "") + String(this->acceleration);
-      StickCP2.Display.drawCenterString(printedAccel, StickCP2.Display.width() / 2, 32 + StickCP2.Display.width() + 5);
+      M5.Lcd.drawCenterString(printedAccel, M5.Lcd.width() / 2, 32 + M5.Lcd.width() + 5);
     }
 
     if (encoder.wasLongPressed()) {
@@ -159,7 +160,7 @@ void BluetoothMouseScreen::handleInput() {
 
 void BluetoothMouseScreen::destroy() {
   // Clean up resources if necessary
-  StickCP2.Display.fillRect(StickCP2.Display.width() / 2 - 9, 5, 17, 8, TFT_BLACK);
+  M5.Lcd.fillRect(M5.Lcd.width() / 2 - 9, 5, 17, 8, TFT_BLACK);
   this->isConnected = false;
   // this->bleMouse.end();
 }

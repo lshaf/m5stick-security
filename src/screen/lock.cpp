@@ -4,12 +4,12 @@
 #include "globals.h"
 #include "utility/helper.h"
 #include "components/router.h"
-#include <M5StickCPlus2.h>
+#include <M5Unified.h>
 
 LockScreen::LockScreen() {}
 
 void LockScreen::updateScreen() {
-  auto& d = StickCP2.Display;
+  auto& d = M5.Lcd;
 
   // Draw lock body (rectangle)
   int centerX = d.width() / 2;

@@ -1,4 +1,4 @@
-#include <M5StickCPlus2.h>
+#include <M5Unified.h>
 
 #include "screen/game_reflex_test.h"
 #include "screen/game_menu.h"
@@ -12,7 +12,7 @@ ReflexTestGameScreen::ReflexTestGameScreen() {
 }
 
 void ReflexTestGameScreen::setBackgroundColor(uint16_t color) {
-  StickCP2.Display.fillRect(0, 18, StickCP2.Display.width(), StickCP2.Display.height() - 18, color);
+  M5.Lcd.fillRect(0, 18, M5.Lcd.width(), M5.Lcd.height() - 18, color);
 }
 
 void ReflexTestGameScreen::startTest() {
@@ -24,49 +24,49 @@ void ReflexTestGameScreen::startTest() {
 void ReflexTestGameScreen::updateScreen() {
   if (state == MAIN_MENU) {
     setBackgroundColor(TFT_BLACK);
-    StickCP2.Display.setTextColor(TFT_WHITE, TFT_BLACK);
-    StickCP2.Display.setTextSize(2);
-    StickCP2.Display.drawCenterString("Reflex", StickCP2.Display.width() / 2, 30);
+    M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
+    M5.Lcd.setTextSize(2);
+    M5.Lcd.drawCenterString("Reflex", M5.Lcd.width() / 2, 30);
 
-    StickCP2.Display.setTextColor(selectedMenu == 0 ? SELECTED_COLOR : TFT_WHITE, TFT_BLACK);
-    StickCP2.Display.drawCenterString("Play", StickCP2.Display.width() / 2, 70);
+    M5.Lcd.setTextColor(selectedMenu == 0 ? SELECTED_COLOR : TFT_WHITE, TFT_BLACK);
+    M5.Lcd.drawCenterString("Play", M5.Lcd.width() / 2, 70);
 
-    StickCP2.Display.setTextColor(selectedMenu == 1 ? SELECTED_COLOR : TFT_WHITE, TFT_BLACK);
-    StickCP2.Display.drawCenterString("Quit", StickCP2.Display.width() / 2, 100);
+    M5.Lcd.setTextColor(selectedMenu == 1 ? SELECTED_COLOR : TFT_WHITE, TFT_BLACK);
+    M5.Lcd.drawCenterString("Quit", M5.Lcd.width() / 2, 100);
 
-    StickCP2.Display.setTextSize(1);
-    StickCP2.Display.setTextColor(TFT_WHITE, TFT_BLACK);
-    StickCP2.Display.drawCenterString("Wait for green, then", StickCP2.Display.width() / 2, 240 - 21);
-    StickCP2.Display.drawCenterString("press encoder!", StickCP2.Display.width() / 2, 240 - 13);
+    M5.Lcd.setTextSize(1);
+    M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
+    M5.Lcd.drawCenterString("Wait for green, then", M5.Lcd.width() / 2, 240 - 21);
+    M5.Lcd.drawCenterString("press encoder!", M5.Lcd.width() / 2, 240 - 13);
   } else if (state == THE_GAME) {  
     setBackgroundColor(TFT_BLUE);
-    StickCP2.Display.setTextColor(TFT_WHITE, TFT_BLUE);
-    StickCP2.Display.setTextSize(2);
-    StickCP2.Display.drawCenterString("WAIT THE", StickCP2.Display.width() / 2, 30);
-    StickCP2.Display.drawCenterString("GREEN", StickCP2.Display.width() / 2, 48);
+    M5.Lcd.setTextColor(TFT_WHITE, TFT_BLUE);
+    M5.Lcd.setTextSize(2);
+    M5.Lcd.drawCenterString("WAIT THE", M5.Lcd.width() / 2, 30);
+    M5.Lcd.drawCenterString("GREEN", M5.Lcd.width() / 2, 48);
   } else if (state == TOO_SOON) {
     setBackgroundColor(TFT_RED);
-    StickCP2.Display.setTextColor(TFT_WHITE, TFT_RED);
-    StickCP2.Display.setTextSize(2);
-    StickCP2.Display.drawCenterString("Too Soon!", StickCP2.Display.width() / 2, 60);
-    StickCP2.Display.setTextSize(1);
-    StickCP2.Display.drawCenterString("Press encoder to retry", StickCP2.Display.width() / 2, 110);
+    M5.Lcd.setTextColor(TFT_WHITE, TFT_RED);
+    M5.Lcd.setTextSize(2);
+    M5.Lcd.drawCenterString("Too Soon!", M5.Lcd.width() / 2, 60);
+    M5.Lcd.setTextSize(1);
+    M5.Lcd.drawCenterString("Press encoder to retry", M5.Lcd.width() / 2, 110);
   } else if (state == PRESS_TIME) {
     setBackgroundColor(TFT_DARKGREEN);
-    StickCP2.Display.setTextColor(TFT_WHITE, TFT_DARKGREEN);
-    StickCP2.Display.setTextSize(2);
-    StickCP2.Display.drawCenterString("PRESS!", StickCP2.Display.width() / 2, StickCP2.Display.height() / 2 - 8);
+    M5.Lcd.setTextColor(TFT_WHITE, TFT_DARKGREEN);
+    M5.Lcd.setTextSize(2);
+    M5.Lcd.drawCenterString("PRESS!", M5.Lcd.width() / 2, M5.Lcd.height() / 2 - 8);
   } else if (state == SHOW_RESULT) {
     setBackgroundColor(TFT_BLACK);
-    StickCP2.Display.setTextColor(TFT_WHITE, TFT_BLACK);
-    StickCP2.Display.setTextSize(2);
-    StickCP2.Display.drawCenterString("Your time:", StickCP2.Display.width() / 2, 30);
-    StickCP2.Display.setTextSize(3);
+    M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
+    M5.Lcd.setTextSize(2);
+    M5.Lcd.drawCenterString("Your time:", M5.Lcd.width() / 2, 30);
+    M5.Lcd.setTextSize(3);
     char buf[16];
     sprintf(buf, "%lu ms", pressTime - greenTime);
-    StickCP2.Display.drawCenterString(buf, StickCP2.Display.width() / 2, 60);
-    StickCP2.Display.setTextSize(1);
-    StickCP2.Display.drawCenterString("Press to menu", StickCP2.Display.width() / 2, 110);
+    M5.Lcd.drawCenterString(buf, M5.Lcd.width() / 2, 60);
+    M5.Lcd.setTextSize(1);
+    M5.Lcd.drawCenterString("Press to menu", M5.Lcd.width() / 2, 110);
   } 
 }
 

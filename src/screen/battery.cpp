@@ -3,13 +3,13 @@
 #include "screen/main_menu.h"
 
 #include "globals.h"
-#include <M5StickCPlus2.h>
+#include <M5Unified.h>
 
 BatteryScreen::BatteryScreen() {}
 
 void BatteryScreen::updateScreen() {
-  auto power = StickCP2.Power;
-  auto d = StickCP2.Display;
+  auto power = M5.Power;
+  auto d = M5.Lcd;
 
   d.setTextColor(TFT_WHITE, TFT_BLACK);
   d.drawCenterString("Battery Info", d.width() / 2, 18);

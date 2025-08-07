@@ -1,5 +1,5 @@
 #include "utility/numberpad.h"
-#include <M5StickCPlus2.h>
+#include <M5Unified.h>
 #include "globals.h"
 
 NumberPad::NumberPad() {}
@@ -28,39 +28,39 @@ void NumberPad::show(String title, int min, int max) {
     currentValue = minValue; // Reset to min if out of bounds
   }
 
-  StickCP2.Display.fillRect(0, 18, StickCP2.Display.width(), StickCP2.Display.height() - 18, TFT_BLACK);
+  M5.Lcd.fillRect(0, 18, M5.Lcd.width(), M5.Lcd.height() - 18, TFT_BLACK);
   updateScreen();
 }
 
 void NumberPad::updateScreen() {
-  StickCP2.Display.setTextSize(1);
+  M5.Lcd.setTextSize(1);
   
   // Draw the number pad UI
-  StickCP2.Display.setTextColor(TFT_WHITE, TFT_BLACK);
-  StickCP2.Display.drawCenterString(this->title, StickCP2.Display.width() / 2, 18);
+  M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
+  M5.Lcd.drawCenterString(this->title, M5.Lcd.width() / 2, 18);
   
   if (this->currentValue < 100) {
-    StickCP2.Display.setTextSize(3);
+    M5.Lcd.setTextSize(3);
   } else if (this->currentValue < 1000) {
-    StickCP2.Display.setTextSize(2);
+    M5.Lcd.setTextSize(2);
   } else {
-    StickCP2.Display.setTextSize(1);
+    M5.Lcd.setTextSize(1);
   }
-  auto fh = StickCP2.Display.fontHeight();
-  auto fw = StickCP2.Display.fontWidth() * (strlen(String(this->currentValue).c_str()) + 1);
-  StickCP2.Display.fillRect(
-    StickCP2.Display.width() / 2 - fw / 2,
-    StickCP2.Display.height() / 2 - fh / 2,
+  auto fh = M5.Lcd.fontHeight();
+  auto fw = M5.Lcd.fontWidth() * (strlen(String(this->currentValue).c_str()) + 1);
+  M5.Lcd.fillRect(
+    M5.Lcd.width() / 2 - fw / 2,
+    M5.Lcd.height() / 2 - fh / 2,
     fw, fh, TFT_BLACK
   );
-  StickCP2.Display.drawCenterString(
+  M5.Lcd.drawCenterString(
     String(this->currentValue), 
-    StickCP2.Display.width() / 2,
-    StickCP2.Display.height() / 2 - fh / 2
+    M5.Lcd.width() / 2,
+    M5.Lcd.height() / 2 - fh / 2
   );
   
-  StickCP2.Display.setTextSize(1);
-  StickCP2.Display.drawCenterString("Press to save", StickCP2.Display.width() / 2, StickCP2.Display.height() - 13);
+  M5.Lcd.setTextSize(1);
+  M5.Lcd.drawCenterString("Press to save", M5.Lcd.width() / 2, M5.Lcd.height() - 13);
 }
 
 void NumberPad::handleInput() {
@@ -68,7 +68,7 @@ void NumberPad::handleInput() {
   if (encoder.movedRight()) setValue(currentValue + 1);
   if (encoder.wasPressed()) {
     if (onOkCallback) {
-      StickCP2.Display.fillRect(0, 18, StickCP2.Display.width(), StickCP2.Display.height() - 18, TFT_BLACK);
+      M5.Lcd.fillRect(0, 18, M5.Lcd.width(), M5.Lcd.height() - 18, TFT_BLACK);
       onOkCallback(currentValue);
     }
   }
