@@ -243,6 +243,8 @@ void BluetoothScreen::handleInput() {
 }
 
 void BluetoothScreen::destroy() {
+  M5.Lcd.fillRect(M5.Lcd.width() / 2 - 9, 5, 17, 8, TFT_BLACK);
+  this->isConnected = false;
   Keyboard.end();
   Mouse.end();
 }
