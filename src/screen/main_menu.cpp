@@ -1,6 +1,5 @@
 #include "screen/main_menu.h"
-#include "screen/bt_keyboard.h"
-#include "screen/bt_mouse.h"
+#include "screen/bluetooth.h"
 #include "screen/game_menu.h"
 #include "screen/setting_menu.h"
 #include "screen/battery.h"
@@ -10,8 +9,7 @@
 MainMenuScreen::MainMenuScreen() {
     this->title = "Main Menu";
     menuItems = {
-      {"BLE Keyboard", []() { Router::setScreen(new BluetoothKeyboardScreen()); }},
-      {"BLE Mouse", []() { Router::setScreen(new BluetoothMouseScreen()); }},
+      {"Bluetooth", []() { Router::setScreen(new BluetoothScreen()); }},
       {"Game", []() { Router::setScreen(new GameMenuScreen()); }},
       {"Settings", []() { Router::setScreen(new SettingMenuScreen()); }},
       {"Battery Info", []() { Router::setScreen(new BatteryScreen()); }},

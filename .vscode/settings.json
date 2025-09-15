@@ -15,7 +15,8 @@
         "istream": "cpp",
         "tuple": "cpp",
         "utility": "cpp",
-        "memory_resource": "cpp"
+        "memory_resource": "cpp",
+        "fstream": "cpp"
     },
     "editor.tabSize": 2,
     "editor.insertSpaces": true
