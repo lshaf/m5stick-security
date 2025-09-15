@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include <LittleFS.h>
+#include <SPIFFS.h>
 #include <M5Unified.h>
 #include <BleCombo.h>
 
@@ -21,8 +21,10 @@ void setup()
 {
   auto cf = M5.config();
   M5.begin(cf);
-  LittleFS.begin();
   Serial.begin(115200);
+  if (!SPIFFS.begin(true)) {
+    Serial.println("SPIFFS Mount Failed!");
+  }
   
   M5.Lcd.setTextSize(1);
   M5.Lcd.setTextColor(SELECTED_COLOR, TFT_BLACK);
@@ -69,8 +71,8 @@ void loop()
     isScreenOff = true;
   }
 
+  SerialCommand::listen();
   if (!isScreenOff) {
-    SerialCommand::listen();
     screen.drawTimeHeader();
     Router::handleMenu();
   } else {

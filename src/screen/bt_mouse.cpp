@@ -3,7 +3,6 @@
 #include "components/router.h"
 #include "screen/main_menu.h"
 #include "utility/helper.h"
-#include <LittleFS.h>
 #include <NimBLEDevice.h>
 #include <M5Unified.h>
 

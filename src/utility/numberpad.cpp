@@ -66,14 +66,11 @@ void NumberPad::updateScreen() {
 void NumberPad::handleInput() {
   if (encoder.movedLeft()) setValue(currentValue - 1);
   if (encoder.movedRight()) setValue(currentValue + 1);
+  if (encoder.wasMoved()) updateScreen();
   if (encoder.wasPressed()) {
     if (onOkCallback) {
       M5.Lcd.fillRect(0, 18, M5.Lcd.width(), M5.Lcd.height() - 18, TFT_BLACK);
       onOkCallback(currentValue);
     }
-  }
-
-  if (encoder.wasPressed() || encoder.wasMoved()) {
-    updateScreen();
   }
 }

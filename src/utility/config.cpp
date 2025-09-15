@@ -1,5 +1,5 @@
 #include "utility/config.h"
-#include <LittleFS.h>
+#include <SPIFFS.h>
 
 #define CONFIG_FILE "/config.ini"
 
@@ -8,8 +8,8 @@ Config::Config() {
 }
 
 void Config::load() {
-  if (!LittleFS.begin()) return;
-  File file = LittleFS.open(CONFIG_FILE, "r");
+  if (!SPIFFS.begin()) return;
+  File file = SPIFFS.open(CONFIG_FILE, "r");
   if (!file) return;
 
   String line;
@@ -32,8 +32,8 @@ void Config::load() {
 }
 
 void Config::save() {
-  if (!LittleFS.begin()) return;
-  File file = LittleFS.open(CONFIG_FILE, "w");
+  if (!SPIFFS.begin()) return;
+  File file = SPIFFS.open(CONFIG_FILE, "w");
   if (!file) return;
   file.printf("brightness=%u\n", brightness);
   file.printf("bleName=%s\n", bleName.c_str());

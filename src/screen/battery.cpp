@@ -58,7 +58,7 @@ void BatteryScreen::updateScreen() {
 
   d.setCursor(5, 88);
   d.print("Is Charging: ");
-  d.drawRightString(String(power.isCharging() ? "Yes" : "No"), d.width() - 5, 88);
+  d.drawRightString(String(power.isCharging() ? "Yes" : " No"), d.width() - 5, 88);
 
   d.drawCenterString("Hold Encoder to Quit", d.width() / 2, d.height() - 13);
 }

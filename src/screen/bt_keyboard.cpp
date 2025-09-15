@@ -4,7 +4,7 @@
 #include "screen/main_menu.h"
 #include "components/menu_manager.h"
 #include "utility/helper.h"
-#include <LittleFS.h>
+#include <SPIFFS.h>
 #include <NimBLEDevice.h>
 #include <BleCombo.h>
 #include <M5Unified.h>
@@ -16,7 +16,7 @@ BluetoothKeyboardScreen::BluetoothKeyboardScreen() {
 }
 
 void BluetoothKeyboardScreen::loadPasswords() {
-  File file = LittleFS.open("/meta_data.ps", "r");
+  File file = SPIFFS.open("/meta_data.ps", "r");
   if (file) {
     while (file.available()) {
       String line = file.readStringUntil('\n');
